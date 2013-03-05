@@ -67,11 +67,16 @@ class GamesController < ApplicationController
     end
     respond_to do |format|
       # don't like enforcing min 1 player here - much better if enforceable by models
-      if !@game.players.empty? and current_user.games << @game \
-        and @game.create_code({:uploaded_data => uploaded_code}).valid? \
-        and @game.create_template({:uploaded_data => uploaded_template}).valid? \
-        and @game.images.create({:uploaded_data => uploaded_image}).valid? \
-        and @game.create_css({:uploaded_data => uploaded_css}).valid?
+      code = @game.build_code({:uploaded_data => uploaded_code})
+      template = @game.build_template({:uploaded_data => uploaded_template})
+      image = @game.images.build({:uploaded_data => uploaded_image})
+      css = @game.build_css({:uploaded_data => uploaded_css})
+      if !@game.players.empty? and \
+        code.valid? and \
+        template.valid? and \
+        image.valid? and \
+        css.valid? and \
+        current_user.games << @game 
         format.html do
           flash[:notice] = 'Game was successfully created.'
           redirect_to :action => 'show', :id => @game
@@ -82,15 +87,12 @@ class GamesController < ApplicationController
           if @game.players.empty?
             # don't like min 1 player here - much better if enforceable by models
             flash[:notice] = 'A game must have at least one player.'
-          else
-            current_user.games.pop
-            @game.destroy
           end
-          if @game.css.nil?
-            flash[:notice] = 'CSS must be a css file'
+          unless css.valid?
+            @game.errors.add(:uploaded_css, 'CSS must be a css file')
           end
-          if @game.images.empty?
-            flash[:notice] = 'Image must be an image file'
+          unless image.valid?
+            @game.errors.add(:uploaded_image, 'Image must be an image file')
           end
           #@game.filename = ''  # don't show this after an error
           render :action => 'new'
