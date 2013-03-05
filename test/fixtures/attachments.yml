@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  size: 1
+  filename: MyString
+  content_type: MyString
+  game: 
+
+two:
+  size: 1
+  filename: MyString
+  content_type: MyString
+  game: 

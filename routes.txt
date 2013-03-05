@@ -1,0 +1,75 @@
+(in /v/filer4b/zweb/z/users/julian/rails2_apps/rubygame)
+               results GET    /results                         {:controller=>"results", :action=>"index"}
+     formatted_results GET    /results.:format                 {:controller=>"results", :action=>"index"}
+                       POST   /results                         {:controller=>"results", :action=>"create"}
+                       POST   /results.:format                 {:controller=>"results", :action=>"create"}
+            new_result GET    /results/new                     {:controller=>"results", :action=>"new"}
+  formatted_new_result GET    /results/new.:format             {:controller=>"results", :action=>"new"}
+           edit_result GET    /results/:id/edit                {:controller=>"results", :action=>"edit"}
+ formatted_edit_result GET    /results/:id/edit.:format        {:controller=>"results", :action=>"edit"}
+                result GET    /results/:id                     {:controller=>"results", :action=>"show"}
+      formatted_result GET    /results/:id.:format             {:controller=>"results", :action=>"show"}
+                       PUT    /results/:id                     {:controller=>"results", :action=>"update"}
+                       PUT    /results/:id.:format             {:controller=>"results", :action=>"update"}
+                       DELETE /results/:id                     {:controller=>"results", :action=>"destroy"}
+                       DELETE /results/:id.:format             {:controller=>"results", :action=>"destroy"}
+                agents GET    /agents                          {:controller=>"agents", :action=>"index"}
+      formatted_agents GET    /agents.:format                  {:controller=>"agents", :action=>"index"}
+                       POST   /agents                          {:controller=>"agents", :action=>"create"}
+                       POST   /agents.:format                  {:controller=>"agents", :action=>"create"}
+             new_agent GET    /agents/new                      {:controller=>"agents", :action=>"new"}
+   formatted_new_agent GET    /agents/new.:format              {:controller=>"agents", :action=>"new"}
+            edit_agent GET    /agents/:id/edit                 {:controller=>"agents", :action=>"edit"}
+  formatted_edit_agent GET    /agents/:id/edit.:format         {:controller=>"agents", :action=>"edit"}
+                 agent GET    /agents/:id                      {:controller=>"agents", :action=>"show"}
+       formatted_agent GET    /agents/:id.:format              {:controller=>"agents", :action=>"show"}
+                       PUT    /agents/:id                      {:controller=>"agents", :action=>"update"}
+                       PUT    /agents/:id.:format              {:controller=>"agents", :action=>"update"}
+                       DELETE /agents/:id                      {:controller=>"agents", :action=>"destroy"}
+                       DELETE /agents/:id.:format              {:controller=>"agents", :action=>"destroy"}
+                 games GET    /games                           {:controller=>"games", :action=>"index"}
+       formatted_games GET    /games.:format                   {:controller=>"games", :action=>"index"}
+                       POST   /games                           {:controller=>"games", :action=>"create"}
+                       POST   /games.:format                   {:controller=>"games", :action=>"create"}
+              new_game GET    /games/new                       {:controller=>"games", :action=>"new"}
+    formatted_new_game GET    /games/new.:format               {:controller=>"games", :action=>"new"}
+             edit_game GET    /games/:id/edit                  {:controller=>"games", :action=>"edit"}
+   formatted_edit_game GET    /games/:id/edit.:format          {:controller=>"games", :action=>"edit"}
+                  game GET    /games/:id                       {:controller=>"games", :action=>"show"}
+        formatted_game GET    /games/:id.:format               {:controller=>"games", :action=>"show"}
+                       PUT    /games/:id                       {:controller=>"games", :action=>"update"}
+                       PUT    /games/:id.:format               {:controller=>"games", :action=>"update"}
+                       DELETE /games/:id                       {:controller=>"games", :action=>"destroy"}
+                       DELETE /games/:id.:format               {:controller=>"games", :action=>"destroy"}
+                 users GET    /users                           {:controller=>"users", :action=>"index"}
+       formatted_users GET    /users.:format                   {:controller=>"users", :action=>"index"}
+                       POST   /users                           {:controller=>"users", :action=>"create"}
+                       POST   /users.:format                   {:controller=>"users", :action=>"create"}
+              new_user GET    /users/new                       {:controller=>"users", :action=>"new"}
+    formatted_new_user GET    /users/new.:format               {:controller=>"users", :action=>"new"}
+             edit_user GET    /users/:id/edit                  {:controller=>"users", :action=>"edit"}
+   formatted_edit_user GET    /users/:id/edit.:format          {:controller=>"users", :action=>"edit"}
+                  user GET    /users/:id                       {:controller=>"users", :action=>"show"}
+        formatted_user GET    /users/:id.:format               {:controller=>"users", :action=>"show"}
+                       PUT    /users/:id                       {:controller=>"users", :action=>"update"}
+                       PUT    /users/:id.:format               {:controller=>"users", :action=>"update"}
+                       DELETE /users/:id                       {:controller=>"users", :action=>"destroy"}
+                       DELETE /users/:id.:format               {:controller=>"users", :action=>"destroy"}
+           new_session GET    /session/new                     {:controller=>"sessions", :action=>"new"}
+ formatted_new_session GET    /session/new.:format             {:controller=>"sessions", :action=>"new"}
+          edit_session GET    /session/edit                    {:controller=>"sessions", :action=>"edit"}
+formatted_edit_session GET    /session/edit.:format            {:controller=>"sessions", :action=>"edit"}
+               session GET    /session                         {:controller=>"sessions", :action=>"show"}
+     formatted_session GET    /session.:format                 {:controller=>"sessions", :action=>"show"}
+                       PUT    /session                         {:controller=>"sessions", :action=>"update"}
+                       PUT    /session.:format                 {:controller=>"sessions", :action=>"update"}
+                       DELETE /session                         {:controller=>"sessions", :action=>"destroy"}
+                       DELETE /session.:format                 {:controller=>"sessions", :action=>"destroy"}
+                       POST   /session                         {:controller=>"sessions", :action=>"create"}
+                       POST   /session.:format                 {:controller=>"sessions", :action=>"create"}
+                              /                                {:controller=>"games", :action=>"index"}
+                 login        /login                           {:controller=>"sessions", :action=>"new"}
+                logout        /logout                          {:controller=>"sessions", :action=>"destroy"}
+                signup        /signup                          {:controller=>"users", :action=>"new"}
+                              /:controller/:action/:id         
+                              /:controller/:action/:id.:format 
