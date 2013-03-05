@@ -1,0 +1,15 @@
+
+##
+# Ignore these file types
+*.log
+*~
+
+##
+# Ignore these directories
+./log
+./tmp
+./user_code/games/*
+./user_code/agents/*
+./user_code/templates/*
+./public/user_images/*
+./public/user_css/*
