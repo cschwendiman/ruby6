@@ -3,26 +3,57 @@
 <% blocked_cols = ['Size', 'Content type'] %>
 <% for column in Game.content_columns %>
   <% unless blocked_cols.member?(column.human_name) %>
-    <table><tr><td align="left"><b><%= column.human_name %>:</b></td>
-    <% case column.human_name
-      when "Name" %>
-        <td><%= @game.send(column.name) %></td>
-        <td><%= button_to 'Play', :controller => 'results', :action => 'new', :id => @game %></td></table>
-        <table><tr><td><b>User:</b></td>
-        <td><%= @game.user.login %></td>
-      <% when "Filename" %>
-        <% if current_user.id == @game.user.id %>
-          <td><%= link_to @game.send(column.name), :action => 'download_source_code', :id => @game %></td>
-          <td> | <%= link_to 'Edit source code', :action => 'edit_source_code', :id => @game %></td>
+    <table>
+      <tr>
+        <td align="left"><b><%= column.human_name %>:</b></td>
+        <% case column.human_name
+           when "Name" %>
+          <td><%= @game.send(column.name) %></td>
+          <td>
+            <%= button_to 'Play', :controller => 'results', :action => 'new',
+                :id => @game %>
+          </td></tr></table><table><tr>
+          <td><b>User:</b></td>
+          <td><%= @game.user.login %></td>
         <% else %>
           <td><%= @game.send(column.name) %></td>
         <% end %>
-      <% else %>
-        <td><%= @game.send(column.name) %></td>
-    <% end %>
-    </tr></table>
+      </tr>
+    </table>
   <% end %>
 <% end %>
+
+<table>
+  <% if current_user.id == @game.user.id  and !@game.code.nil? %>
+    <tr>
+      <td><b>Code:</b></td>
+      <td>
+        <%= link_to @game.code.filename, :action => 'download_source_code',
+            :id =>@game %>
+      </td>
+      <td> | <%= link_to 'Edit source code', :action => 'edit_source_code',
+                 :id => @game %>
+      </td>
+    </tr>
+  <% else %>
+    <tr>
+      <td><b>Code:</b></td>
+      <td><%= @game.code.filename unless @game.code.nil? %></td>
+    </tr>
+  <% end %>
+  <tr>
+    <td><b>Template:</b></td>
+    <td><%= @game.template.filename unless @game.template.nil? %></td>
+  </tr>
+  <tr>
+    <td><b>CSS:</b></td>
+    <td><%= @game.css.filename unless @game.css.nil? %></td>
+  </tr>
+  <tr>
+    <td><b>Image:</b></td>
+    <td><%= @game.image.filename unless @game.image.nil? %></td>
+  </tr>
+</table>
 
 <table><tr><td><b>Players:</b></td></tr></table>
 <ul>

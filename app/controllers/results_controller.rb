@@ -42,6 +42,8 @@ class ResultsController < ApplicationController
   # GET /results/1.xml
   def show
     @result = Result.find(params[:id])
+    @result.game.update_attachments
+    
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @result }
@@ -73,6 +75,9 @@ class ResultsController < ApplicationController
         participant = @result.participants.build :player_id=>id, :agent_id=>player[:id]
       end
     end
+    
+    @result.game.update_attachments
+    
     # determine absolute paths - relative paths violate safe level for loading untrusted.rb
     rg_controller_path = File.dirname(__FILE__)
     rg_untrusted_path = rg_controller_path + '/../../tmp/untrusted'
@@ -82,13 +87,16 @@ class ResultsController < ApplicationController
     require rg_basecode_path + '/gamebase.rb'
     require rg_basecode_path + '/agentbase.rb'
     # determine game/agent filenames and class_names
-    user_code_files = [@result.game.public_filename]
+    
+    user_code_files = [@result.game.code.public_filename]
     agent_class_names = []
-    @result.participants.each do |mp| 
+    @result.participants.each do |mp|
       agt = Agent.find(mp.agent_id)
-      user_code_files << agt.public_filename unless agent_class_names.member? agt.class_name
+      user_code_files << agt.public_filename unless
+        agent_class_names.member? agt.class_name
       agent_class_names << agt.class_name
     end
+    
     # write untrusted match script
     user_code_boundaries = [0]
     untrusted_filename = current_user.login + '_untrusted.rb'
@@ -97,7 +105,8 @@ class ResultsController < ApplicationController
       user_code_files.each do |u_file|
         code = File.read(u_file)
         f.puts code
-        user_code_boundaries << user_code_boundaries[-1]  + code.split("\n").length
+        user_code_boundaries << user_code_boundaries[-1] +
+          code.split("\n").length
       end
       f.puts "player_classes = [#{agent_class_names.join(', ')}]"
       f.puts "g = #{@result.game.class_name}.new(player_classes)"

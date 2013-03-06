@@ -10,7 +10,13 @@ class GamesController < ApplicationController
       redirect_to :action => 'show', :id => @game
     end
   end
-
+  
+  def find_game
+    @game = Game.find(params[:id])
+    @game.update_attachments
+    @game
+  end
+  
   # GET /games
   # GET /games.xml
   def index
@@ -31,11 +37,12 @@ class GamesController < ApplicationController
       format.xml  { render :xml => @games }
     end
   end
-
+  
   # GET /games/1
   # GET /games/1.xml
   def show
-    @game = Game.find(params[:id])
+    @game = find_game
+    # @game = Game.find(params[:id])
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @game }
@@ -63,20 +70,19 @@ class GamesController < ApplicationController
     params[:newplayer].each do |player|
       p = Player.new(player);
       next if p.name.blank?
-      @game.players << p  # this does not save p to db because @game not yet saved
+      # this does not save p to db because @game not yet saved
+      @game.players << p
     end
     respond_to do |format|
-      # don't like enforcing min 1 player here - much better if enforceable by models
+      # don't like enforcing min 1 player here - much better if enforceable by
+      # models
       code = @game.build_code({:uploaded_data => uploaded_code})
       template = @game.build_template({:uploaded_data => uploaded_template})
-      image = @game.images.build({:uploaded_data => uploaded_image})
+      image = @game.build_image({:uploaded_data => uploaded_image})
       css = @game.build_css({:uploaded_data => uploaded_css})
-      if !@game.players.empty? and \
-        code.valid? and \
-        template.valid? and \
-        image.valid? and \
-        css.valid? and \
-        current_user.games << @game 
+      if(!@game.players.empty? and @game.code.valid? and
+         @game.template.valid? and
+         @game.image.valid? and @game.css.valid? and current_user.games << @game)
         format.html do
           flash[:notice] = 'Game was successfully created.'
           redirect_to :action => 'show', :id => @game
@@ -85,7 +91,8 @@ class GamesController < ApplicationController
       else
         format.html do
           if @game.players.empty?
-            # don't like min 1 player here - much better if enforceable by models
+            # don't like min 1 player here - much better if enforceable by
+            # models
             flash[:notice] = 'A game must have at least one player.'
           end
           unless css.valid?
@@ -100,6 +107,11 @@ class GamesController < ApplicationController
         format.xml  { render :xml => @game.errors, :status => :unprocessable_entity }
       end
     end
+    
+    raise Exception.new("Code is nil") if(@game.code.nil?)
+    raise Exception.new("Template is nil") if(@game.template.nil?)
+    raise Exception.new("Image is nil") if(@game.image.nil?)
+    raise Exception.new("CSS is nil") if(@game.css.nil?)
   end
 
   # GET /games/1/edit
@@ -110,11 +122,36 @@ class GamesController < ApplicationController
   # PUT /games/1
   # PUT /games/1.xml
   def update
-    #@game = Game.find(params[:id])  # now performed in :find_check_ownership
+    @game = find_game
+    raise Exception.new("FIND GAME DIDN'T WORK DAMNIT!") if @game.code.nil?
+    # @game = Game.find(params[:id])  # now performed in :find_check_ownership
+    uploaded_code = params[:game].delete(:uploaded_code)
+    uploaded_template = params[:game].delete(:uploaded_template)
+    uploaded_image = params[:game].delete(:uploaded_image)
+    uploaded_css = params[:game].delete(:uploaded_css)
+    
+    if(!uploaded_code.nil?)
+      @game.code.destroy() unless @game.code.nil?
+      @game.build_code({:uploaded_data => uploaded_code})
+    end
+    if(!uploaded_template.nil?)
+      @game.template.destroy() unless @game.template.nil?
+      @game.build_template({:uploaded_data => uploaded_template})
+    end
+    if(!uploaded_image.nil?)
+      @game.image.destroy() unless @game.image.nil?
+      @game.build_image({:uploaded_data => uploaded_image})
+    end
+    if(!uploaded_css.nil?)
+      @game.css.destroy() unless @game.css.nil?
+      @game.build_css({:uploaded_data => uploaded_css})
+    end
+    
     delete_player_failed = false
     params[:player].each do |id, player|
-      p = @game.players.find(id);
-      #p.destroy if p.name.blank?  # this line made it hard to enforce presence of one player
+      p = @game.players.find(id)
+      # this line made it hard to enforce presence of one player
+      #p.destroy if p.name.blank?
       if player[:name].empty?
         if @game.players.size > 1
           @game.players.delete(p) # deletes from db and players collection
@@ -150,40 +187,49 @@ class GamesController < ApplicationController
   # DELETE /games/1
   # DELETE /games/1.xml
   def destroy
-    #@game = Game.find(params[:id])  # now performed in :find_check_ownership
-	  if @game.results.nil? or @game.results.empty?
+    @game = find_game
+    # @game = Game.find(params[:id])  # now performed in :find_check_ownership
+    if @game.results.nil? or @game.results.empty?
       if @game.agents.nil? or @game.agents.empty?
+        @game.code.destroy unless @game.code.nil?
+        @game.image.destroy unless @game.image.nil?
+        @game.template.destroy unless @game.image.nil?
+        @game.css.destroy unless @game.css.nil?
+        
         @game.destroy
         flash[:notice] = 'Game successfully destroyed.'
       else
         flash[:notice] = 'Game not destroyed because there are agents that can play it.'
       end
-	  else
-	    flash[:notice] = 'Game not destroyed because it has result records.'
-	  end
+    else
+      flash[:notice] = 'Game not destroyed because it has result records.'
+    end
     redirect_to :action => 'index', :filter_type => params[:filter_type], :filter_id => params[:filter_id], :filter_name => params[:filter_name]
-#    respond_to do |format|
-#      format.html { redirect_to(games_url) }
-#      format.xml  { head :ok }
-#    end
+    #respond_to do |format|
+    #  format.html { redirect_to(games_url) }
+    #  format.xml  { head :ok }
+    #end
   end
-
+  
   def download_source_code
-    #@game = Game.find(params[:id])  # now performed in :find_check_ownership
-    send_file @game.public_filename, :type => 'plain/text', :disposition => 'inline'
+    @game = find_game
+    # @game = Game.find(params[:id])  # now performed in :find_check_ownership
+    send_file @game.code.public_filename, :type => 'plain/text', :disposition => 'inline'
   end
-
+  
   def edit_source_code
-    #@game = Game.find(params[:id])  # now performed in :find_check_ownership
-    code_file = File.open(@game.public_filename)
+    @game = find_game
+    # @game = Game.find(params[:id])  # now performed in :find_check_ownership
+    code_file = File.open(@game.code.public_filename)
     @code = code_file.read
     code_file.close
   end
-
+  
   def update_source_code
-    #@game = Game.find(params[:id])  # now performed in :find_check_ownership
+    @game = find_game
+    # @game = Game.find(params[:id])  # now performed in :find_check_ownership
     @code = params[:source_code].gsub("\r\n", "\n")
-    code_file = File.open(@game.public_filename, 'w')
+    code_file = File.open(@game.code.public_filename, 'w')
     code_file.write @code
     code_file.close 
     flash[:notice] = 'Source code successfully updated'
