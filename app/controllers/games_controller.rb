@@ -256,19 +256,19 @@ class GamesController < ApplicationController
   
   def download_css_code
     @game = find_game
-    send_file @game.css.get_public_filename, :type => 'plain/text',
+    send_file @game.css.absolute_filename, :type => 'plain/text',
       :disposition => 'inline'
   end
   def edit_css_code
     @game = find_game
-    css_file = File.open(@game.css.get_public_filename)
+    css_file = File.open(@game.css.absolute_filename)
     @css_code = css_file.read
     css_file.close
   end
   def update_css_code
     @game = find_game
     @css_code = params[:source_code].gsub("\r\n", "\n")
-    css_file = File.open(@game.css.get_public_filename, 'w')
+    css_file = File.open(@game.css.absolute_filename, 'w')
     css_file.write(@css_code)
     css_file.close
     flash[:notice] = 'CSS sucessfully updated'
