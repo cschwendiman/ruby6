@@ -23,12 +23,7 @@
 <p><b>Result:&nbsp</b><%=h @result.result  %></p>
 <p><b>Saved:&nbsp</b><%=h @result.saved.inspect %></p>
 <p>
-  <% img_path = @result.game.image.public_filename %>
-  <% $SAFE = 0 %>
-  <% html = render :file => @result.game.template.public_filename, :remove_contents => ['script'], :locals =>{:img_path =>img_path, :state =>@result.saved }%>
-  <% $SAFE = 0 %>
-  <% #ActionController::Base.helpers.sanitize html %>
-  <%= html %>
+  <%= @game_template %>
 </p>
 <% if current_user.id == @result.user.id %>
   <p>

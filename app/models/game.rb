@@ -24,4 +24,10 @@ class Game < ActiveRecord::Base
   
   cattr_reader :per_page
   @@per_page = 50
+
+  def render_template(state)
+    template_binding = self.send(:binding).taint
+    renderer = ERB.new(File.read(self.template.public_filename), 4)
+    return renderer.result(template_binding)
+  end
 end

@@ -101,6 +101,13 @@ class GamesController < ApplicationController
           unless image.valid?
             @game.errors.add(:uploaded_image, 'Image must be an image file')
           end
+          unless code.valid?
+            flash[:notice] = 'bad code'
+          end
+          unless template.valid?
+            flash[:notice] = 'bad template'
+          end
+
           #@game.filename = ''  # don't show this after an error
           render :action => 'new'
         end
