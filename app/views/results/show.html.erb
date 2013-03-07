@@ -23,7 +23,7 @@
 <p><b>Result:&nbsp</b><%=h @result.result  %></p>
 <p><b>Saved:&nbsp</b><%=h @result.saved.inspect %></p>
 <p>
-  <%= @game_template %>
+  <%= sanitize @game_template %>
 </p>
 <% if current_user.id == @result.user.id %>
   <p>

@@ -58,7 +58,21 @@ Rails::Initializer.run do |config|
     :session_key => '_rubygame_session',
     :secret      => '0d4175f038d51cdff8c154746a6f99a061afb943590dd60f97df823936c78d27012cc521dcc436925a92bd4e50f9fb31b2e263387e11fae13eff8d4b4d73e763'
   }
-
+  
+  ##
+  # Configure the sanitize module (I keep misspelling that)
+  # We want to allow pretty much everything but tags that could be
+  # 'dangerous', but not the tags that are only harmful to the display of the
+  # page. It would be perfectly ok to allow them to spew 100 divs onto the page
+  # for example, or a list that is 10000 items long, since that is just ugly,
+  # not dangerous. <script> is the real tag we want to disallow, as well as
+  # things like <applet> or other such tags that could be used maliciously.
+  # Attributes are all pretty much ok, but it's hard to find a good list of
+  # what attributes actually exist.
+  # These lists are a weird mix of HTML5 and HTML4.1
+  config.action_view.sanitized_allowed_tags = 'table', 'tr', 'td', 'div', 'p', 'b', 'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'dd', 'details', 'dfn', 'dir', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'i', 'img', 'label', 'legend', 'li', 'ol', 'pre', 'q', 's', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'th', 'time', 'tt', 'u', 'ul'
+  config.action_view.sanitized_allowed_attributes = 'id', 'class', 'style', 'cellpadding', 'cellspacing', 'charset', 'cite', 'border', 'align', 'span', 'width', 'valign', 'bgcolor', 'color', 'colspan', 'datetime', 'dir', 'height', 'nowrap', 'rowspan', 'rules', 'scope', 'title', 'type', 'width'
+  
   # Use the database for sessions instead of the cookie-based default,
   # which shouldn't be used to store highly confidential information
   # (create the session table with "rake db:sessions:create")
