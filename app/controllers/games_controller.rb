@@ -232,4 +232,46 @@ class GamesController < ApplicationController
     flash[:notice] = 'Source code successfully updated'
     redirect_to :back
   end
+  
+  def download_template_code
+    @game = find_game
+    send_file @game.template.public_filename, :type => 'plain/text',
+      :disposition => 'inline'
+  end
+  def edit_template_code
+    @game = find_game
+    template_file = File.open(@game.template.public_filename)
+    @template_code = template_file.read
+    template_file.close
+  end
+  def update_template_code
+    @game = find_game
+    @template_code = params[:source_code].gsub("\r\n", "\n")
+    template_file = File.open(@game.template.public_filename, 'w')
+    template_file.write(@template_code)
+    template_file.close
+    flash[:notice] = 'Template successfully updated'
+    redirect_to :back
+  end
+  
+  def download_css_code
+    @game = find_game
+    send_file @game.css.get_public_filename, :type => 'plain/text',
+      :disposition => 'inline'
+  end
+  def edit_css_code
+    @game = find_game
+    css_file = File.open(@game.css.get_public_filename)
+    @css_code = css_file.read
+    css_file.close
+  end
+  def update_css_code
+    @game = find_game
+    @css_code = params[:source_code].gsub("\r\n", "\n")
+    css_file = File.open(@game.css.get_public_filename, 'w')
+    css_file.write(@css_code)
+    css_file.close
+    flash[:notice] = 'CSS sucessfully updated'
+    redirect_to :back
+  end
 end

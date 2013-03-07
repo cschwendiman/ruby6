@@ -1,0 +1,22 @@
+.empty {
+    width:32px;
+    height:32px;
+    background:url(user_images/c4spritesheet.png) 0 0;
+    color:white;
+}
+
+.player1 {
+    width:32px;
+    height:32px;
+    background:url(user_images/c4spritesheet.png) 32 0;
+    color:white;
+    text-align:center;
+}
+
+.player2 {
+    width:32px;
+    height:32px;
+    background:url(user_images/c4spritesheet.png) 64 0;
+    color:white;
+    text-align:center;
+}

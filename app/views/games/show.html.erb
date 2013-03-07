@@ -35,20 +35,42 @@
                  :id => @game %>
       </td>
     </tr>
+    <tr>
+      <td><b>Template</b></td>
+      <td>
+        <%= link_to @game.template.filename,
+            :action =>'download_template_code', :id =>@game %>
+      </td>
+      <td> |
+        <%= link_to 'Edit template', :action => 'edit_template_code',
+            :id => @game %>
+      </td>
+    </tr>
+    <tr>
+      <td><b>CSS</b></td>
+      <td>
+        <%= link_to @game.css.filename,
+            :action =>'download_css_code', :id =>@game %>
+      </td>
+      <td> |
+        <%= link_to 'Edit css', :action => 'edit_css_code',
+            :id => @game %>
+      </td>
+    </tr>
   <% else %>
     <tr>
       <td><b>Code:</b></td>
       <td><%= @game.code.filename unless @game.code.nil? %></td>
     </tr>
+    <tr>
+      <td><b>Template:</b></td>
+      <td><%= @game.template.filename unless @game.template.nil? %></td>
+    </tr>
+    <tr>
+      <td><b>CSS:</b></td>
+      <td><%= @game.css.filename unless @game.css.nil? %></td>
+    </tr>
   <% end %>
-  <tr>
-    <td><b>Template:</b></td>
-    <td><%= @game.template.filename unless @game.template.nil? %></td>
-  </tr>
-  <tr>
-    <td><b>CSS:</b></td>
-    <td><%= @game.css.filename unless @game.css.nil? %></td>
-  </tr>
   <tr>
     <td><b>Image:</b></td>
     <td><%= @game.image.filename unless @game.image.nil? %></td>
