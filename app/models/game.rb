@@ -26,8 +26,12 @@ class Game < ActiveRecord::Base
   @@per_page = 50
 
   def render_template(state)
-    template_binding = self.send(:binding).taint
-    renderer = ERB.new(File.read(self.template.public_filename), 4)
-    return renderer.result(template_binding)
+    begin
+      image_path = self.image.public_filename
+      renderer = ERB.new(File.read(self.template.public_filename), 4)
+      return renderer.result(binding.clone.taint)
+    rescue Exception => e
+      return "BAD TEMPLATE : #{e.message}"
+    end
   end
 end
