@@ -133,20 +133,20 @@ class GamesController < ApplicationController
     uploaded_css = params[:game].delete(:uploaded_css)
     
     unless(uploaded_code.nil? || uploaded_code.size == 0)
-      @game.code.destroy() unless @game.code.nil?
-      @game.build_code({:uploaded_data => uploaded_code})
+      #@game.code.destroy() unless @game.code.nil?
+      @game.create_code({:uploaded_data => uploaded_code})
     end
     unless(uploaded_template.nil? || uploaded_template.size == 0)
-      @game.template.destroy() unless @game.template.nil?
-      @game.build_template({:uploaded_data => uploaded_template})
+      #@game.template.destroy() unless @game.template.nil?
+      @game.create_template({:uploaded_data => uploaded_template})
     end
     unless(uploaded_image.nil? || uploaded_image.size == 0)
-      @game.image.destroy() unless @game.image.nil?
-      @game.build_image({:uploaded_data => uploaded_image})
+      #@game.image.destroy() unless @game.image.nil?
+      @game.create_image({:uploaded_data => uploaded_image})
     end
     unless(uploaded_css.nil? || uploaded_css.size == 0)
-      @game.css.destroy() unless @game.css.nil?
-      @game.build_css({:uploaded_data => uploaded_css})
+      #@game.css.destroy() unless @game.css.nil?
+      @game.create_css({:uploaded_data => uploaded_css})
     end
     
     delete_player_failed = false

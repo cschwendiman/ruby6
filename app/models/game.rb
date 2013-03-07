@@ -16,7 +16,10 @@ class Game < ActiveRecord::Base
 
   def render_template(state)
     begin
-      image_path = self.image.public_filename
+      self.image
+      self.code
+      self.css
+      self.template
 
       renderer = ERB.new(File.read(self.template.public_filename), 4)
       return renderer.result(binding.clone.taint)

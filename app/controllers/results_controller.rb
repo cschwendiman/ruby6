@@ -43,6 +43,7 @@ class ResultsController < ApplicationController
   def show
     @result = Result.find(params[:id])
     @game_template = @result.game.render_template(@result.saved)
+    @user_stylesheet = @result.game.css
     
     respond_to do |format|
       format.html # show.html.erb

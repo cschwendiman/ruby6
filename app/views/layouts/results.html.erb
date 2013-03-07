@@ -6,6 +6,9 @@
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title>Results: <%= controller.action_name %></title>
   <%= stylesheet_link_tag 'scaffold' %>
+  <% unless @user_stylesheet.nil? %>
+  	<link rel="stylesheet" type="text/css" href="<%=@user_stylesheet.public_filename%>">
+  <% end %>
 </head>
 <body>
 
