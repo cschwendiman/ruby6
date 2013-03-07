@@ -42,7 +42,6 @@ class ResultsController < ApplicationController
   # GET /results/1.xml
   def show
     @result = Result.find(params[:id])
-    @result.game.update_attachments
     @game_template = @result.game.render_template(@result.saved)
     
     respond_to do |format|
@@ -76,8 +75,6 @@ class ResultsController < ApplicationController
         participant = @result.participants.build :player_id=>id, :agent_id=>player[:id]
       end
     end
-    
-    @result.game.update_attachments
     
     # determine absolute paths - relative paths violate safe level for loading untrusted.rb
     rg_controller_path = File.dirname(__FILE__)

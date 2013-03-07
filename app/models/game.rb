@@ -11,23 +11,13 @@ class Game < ActiveRecord::Base
   validates_presence_of :name, :class_name
   serialize :saved
   
-  attr_accessor :code, :css, :template, :image
-  
-  def update_attachments
-    conditions = ["game_id = ?", self.id]
-    self.code = Code.find(:first, :conditions =>conditions)
-    self.template = Template.find(:first, :conditions =>conditions)
-    self.image = Image.find(:first, :conditions =>conditions)
-    self.css = Css.find(:first, :conditions =>conditions)
-    nil
-  end
-  
   cattr_reader :per_page
   @@per_page = 50
 
   def render_template(state)
     begin
       image_path = self.image.public_filename
+
       renderer = ERB.new(File.read(self.template.public_filename), 4)
       return renderer.result(binding.clone.taint)
     rescue Exception => e

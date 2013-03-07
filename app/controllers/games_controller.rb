@@ -13,8 +13,6 @@ class GamesController < ApplicationController
   
   def find_game
     @game = Game.find(params[:id])
-    @game.update_attachments
-    @game
   end
   
   # GET /games
@@ -74,8 +72,6 @@ class GamesController < ApplicationController
       @game.players << p
     end
     respond_to do |format|
-      # don't like enforcing min 1 player here - much better if enforceable by
-      # models
       code = @game.build_code({:uploaded_data => uploaded_code})
       template = @game.build_template({:uploaded_data => uploaded_template})
       image = @game.build_image({:uploaded_data => uploaded_image})
@@ -130,26 +126,25 @@ class GamesController < ApplicationController
   # PUT /games/1.xml
   def update
     @game = find_game
-    raise Exception.new("FIND GAME DIDN'T WORK DAMNIT!") if @game.code.nil?
-    # @game = Game.find(params[:id])  # now performed in :find_check_ownership
+
     uploaded_code = params[:game].delete(:uploaded_code)
     uploaded_template = params[:game].delete(:uploaded_template)
     uploaded_image = params[:game].delete(:uploaded_image)
     uploaded_css = params[:game].delete(:uploaded_css)
     
-    if(!uploaded_code.nil?)
+    unless(uploaded_code.nil? || uploaded_code.size == 0)
       @game.code.destroy() unless @game.code.nil?
       @game.build_code({:uploaded_data => uploaded_code})
     end
-    if(!uploaded_template.nil?)
+    unless(uploaded_template.nil? || uploaded_template.size == 0)
       @game.template.destroy() unless @game.template.nil?
       @game.build_template({:uploaded_data => uploaded_template})
     end
-    if(!uploaded_image.nil?)
+    unless(uploaded_image.nil? || uploaded_image.size == 0)
       @game.image.destroy() unless @game.image.nil?
       @game.build_image({:uploaded_data => uploaded_image})
     end
-    if(!uploaded_css.nil?)
+    unless(uploaded_css.nil? || uploaded_css.size == 0)
       @game.css.destroy() unless @game.css.nil?
       @game.build_css({:uploaded_data => uploaded_css})
     end
@@ -198,11 +193,6 @@ class GamesController < ApplicationController
     # @game = Game.find(params[:id])  # now performed in :find_check_ownership
     if @game.results.nil? or @game.results.empty?
       if @game.agents.nil? or @game.agents.empty?
-        @game.code.destroy unless @game.code.nil?
-        @game.image.destroy unless @game.image.nil?
-        @game.template.destroy unless @game.image.nil?
-        @game.css.destroy unless @game.css.nil?
-        
         @game.destroy
         flash[:notice] = 'Game successfully destroyed.'
       else
